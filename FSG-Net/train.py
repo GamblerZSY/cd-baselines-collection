@@ -100,7 +100,7 @@ def train(opt):
             outs = model(batch_img1, batch_img2)
             outs = scale.scale_output(outs)
             loss = criterion(outs, (batch_label,))
-            train_avg_loss = (train_avg_loss * i + loss.cpu().detach().numpy()) / (i + 1)
+            train_avg_loss = (train_avg_loss * i + loss.cuda().detach().numpy()) / (i + 1)
             loss.backward()
             if ((i+1) % accumulate_iter) == 0:
                 optimizer.step()
