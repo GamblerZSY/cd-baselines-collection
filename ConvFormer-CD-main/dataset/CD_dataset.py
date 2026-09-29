@@ -24,7 +24,7 @@ ANNOT_FOLDER_NAME = "label"
 
 IGNORE = 255
 
-label_suffix = '.jpg'  # jpg for gan dataset, others : png
+label_suffix = '.png'  # jpg for gan dataset, others : png
 
 
 def load_img_name_list(dataset_path):

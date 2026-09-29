@@ -30,7 +30,7 @@ def parse_args():
                         help='project_name')
     parser.add_argument('--epochs', default=400, type=int, metavar='N',
                         help='number of total epochs to run')
-    parser.add_argument('-b', '--batch_size', default=32, type=int,
+    parser.add_argument('-b', '--batch_size', default=8, type=int,
                         metavar='N', help='mini-batch size (default: 32)')
 
     # model
@@ -43,7 +43,7 @@ def parse_args():
 
     # dataset
     parser.add_argument('--dataset', default='LEVIR', help='dataset name')
-    parser.add_argument('--img_dir', default="/data/lmt/Dataset/LEVIR_Dataset/LEVIR_224_overlap",
+    parser.add_argument('--img_dir', default=r"D:\=0=DLProject\TEST_LEVIR_CD\samples",
                         help='dataset name')
     # optimizer
     parser.add_argument('--optimizer', default='AdamW', choices=['Adam','AdamW', 'SGD'], help='')
@@ -61,7 +61,7 @@ def parse_args():
     parser.add_argument('--patience', default=2, type=int)
     parser.add_argument('--milestones', default='1,2', type=str)
     parser.add_argument('--gamma', default=2 / 3, type=float)
-    parser.add_argument('--num_workers', default=8, type=int)
+    parser.add_argument('--num_workers', default=0, type=int)
     config = parser.parse_args()
 
     return config
@@ -83,8 +83,8 @@ def train(config, running_metric, train_loader, model, criterion, optimizer, epo
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        running_acc = running_metric.update_cm(pr=torch.argmax(outputs, dim=1).cpu().numpy(),
-                                               gt=label_batch.cpu().numpy())
+        running_acc = running_metric.update_cm(pr=torch.argmax(outputs, dim=1).cuda().numpy(),
+                                               gt=label_batch.cuda().numpy())
         train_loss_list.append(loss)
         train_acc_list.append(running_acc)
         if i_batch == x and epoch % 10 == 0:
@@ -111,8 +111,8 @@ def validate(config, val_loader, running_metric, model, criterion, epoch):
             outputs = model(image_batch1, image_batch2)
             loss = criterion(outputs, label_batch)
             val_loss_list.append(loss.item())
-            running_acc = running_metric.update_cm(pr=torch.argmax(outputs, dim=1).cpu().numpy(),
-                                                   gt=label_batch.cpu().numpy())
+            running_acc = running_metric.update_cm(pr=torch.argmax(outputs, dim=1).cuda().numpy(),
+                                                   gt=label_batch.cuda().numpy())
             val_acc_list.append(running_acc)
             if i_batch == x and epoch % 10 == 0:
                 utils.draw(sampled_batch, outputs, f"./vis/{config['name']}", epoch, x, 'val')
@@ -142,10 +142,10 @@ def main():
     time_str = time.strftime("%m-%d-%H-%M")
     # config['name'] = "Test"
     config['name'] = f"{type(model).__name__}_{config['dim']}_{config['dataset']}_{time_str}"
-    save_dir = f'outputs/{config["name"]}'
+    save_dir = f'../../results/ConvFormer-CD/{config["name"]}'
     os.makedirs(save_dir, exist_ok=True)
     print('-' * 20)
-    with open(f'outputs/{config["name"]}/parameters.txt', 'w', encoding='utf-8') as f:
+    with open(f'../../results/ConvFormer-CD/{config["name"]}/parameters.txt', 'w', encoding='utf-8') as f:
         for key in config:
             print('%s: %s' % (key, config[key]))
             f.write('%s: %s\n' % (key, config[key]))
@@ -236,7 +236,7 @@ def main():
         if val_scores["F1_1"] > val_best_f1_1:
             val_best_f1_1 = val_scores["F1_1"]
             best_epoch_id = epoch
-            with open(f'outputs/{config["name"]}/val_scores.txt', 'w', encoding='utf-8') as f:
+            with open(f'../../results/ConvFormer-CD/{config["name"]}/val_scores.txt', 'w', encoding='utf-8') as f:
                 for key in val_scores:
                     f.write('%s: %s\n' % (key, val_scores[key]))
             save_model(epoch, val_best_f1_1, best_epoch_id, model, optimizer, scheduler, save_dir, "last_model2.pth")

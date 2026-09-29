@@ -140,9 +140,9 @@ def train(opt):
             )
 
 def set_randomness():
-    random.seed(2025)
-    np.random.seed(2025)
-    torch.manual_seed(2025)
+    random.seed(777)
+    np.random.seed(777)
+    torch.manual_seed(777)
 
 
 if __name__ == "__main__":
@@ -155,11 +155,11 @@ if __name__ == "__main__":
     parser.add_argument("--pretrain", type=str,
                         default="")
     parser.add_argument("--cuda", type=str, default="0")
-    parser.add_argument("--dataset-dir", type=str, default='data/your_dataset')
-    parser.add_argument("--batch-size", type=int, default=32)
-    parser.add_argument("--epochs", type=int, default=10)
+    parser.add_argument("--dataset-dir", type=str, default=r'D:\=0=DLProject\TEST_LEVIR_CD')
+    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--epochs", type=int, default=100)
     parser.add_argument("--input-size", type=int, default=256)
-    parser.add_argument("--num-workers", type=int, default=16)
+    parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--learning-rate", type=float, default= 0.001)
     parser.add_argument("--dual-label", type=bool, default=False)
     parser.add_argument("--finetune", type=bool, default=True)

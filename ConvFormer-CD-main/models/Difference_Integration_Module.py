@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from Exchange_Module import ChannelExchange
+from .Exchange_Module import ChannelExchange
 
 
 class PerturbMask(nn.Module):

@@ -75,8 +75,8 @@ def main():
             image_batch1, image_batch2, label_batch = sampled_batch['A'], sampled_batch['B'], sampled_batch["L"]
             image_batch1, image_batch2, label_batch = image_batch1.cuda(), image_batch2.cuda(), label_batch.squeeze().cuda()
             outputs = model(image_batch1, image_batch2)
-            running_acc = running_metric.update_cm(pr=torch.argmax(outputs, dim=1).cpu().numpy(),
-                                                   gt=label_batch.cpu().numpy())
+            running_acc = running_metric.update_cm(pr=torch.argmax(outputs, dim=1).cuda().numpy(),
+                                                   gt=label_batch.cuda().numpy())
             val_acc_list.append(running_acc)
             # utils.draw(sampled_batch, outputs, config['output_dir'], i_batch, 0, 'test')
 

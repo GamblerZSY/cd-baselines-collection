@@ -1,9 +1,9 @@
 class Path_Hyperparameter:
     # random_seed = 803
-    random_seed = 42
+    random_seed = 777
     # dataset hyper-parameter
-    dataset_name = 'whu'
-    # dataset_name = 'levir_crop'
+    # dataset_name = 'whu'
+    dataset_name = 'LEVIR_CD'
 
     # training hyper-parameter
     epochs: int =100 # Number of epochs

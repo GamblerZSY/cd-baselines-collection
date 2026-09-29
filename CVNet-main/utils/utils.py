@@ -41,9 +41,9 @@ def save_model(model, path, epoch, mode, optimizer=None):
     if mode == 'checkpoint':
         state_dict = {'net': model.state_dict(), 'optimizer': optimizer.state_dict()}
         torch.save(state_dict,
-                   str(path + f'checkpoint_epoch{epoch}_{localtime}.pth'))
+                   str(path + f'checkpoint_epoch{epoch}.pth'))
     else:
-        torch.save(model.state_dict(), str(path + f'best_{mode}_epoch{epoch}_{localtime}.pth'))
+        torch.save(model.state_dict(), str(path + f'best_{mode}_epoch{epoch}.pth'))
     logging.info(f'best {mode} model {epoch} saved at {localtime}!')
 
 
@@ -154,9 +154,9 @@ def train_val(
         if i == sample_batch:
             sample_index = np.random.randint(low=0, high=batch_img1.shape[0])
             # ipdb.set_trace()
-            t1_images_dir = Path(f'./{dataset_name}/{mode}/t1/')
-            t2_images_dir = Path(f'./{dataset_name}/{mode}/t2/')
-            labels_dir = Path(f'./{dataset_name}/{mode}/label/')
+            t1_images_dir = Path(f'../../../{dataset_name}/{mode}/A/')
+            t2_images_dir = Path(f'../../../{dataset_name}/{mode}/B/')
+            labels_dir = Path(f'../../../{dataset_name}/{mode}/OUT/')
             t1_img_log = Image.open(list(t1_images_dir.glob(name[sample_index] + '.*'))[0])
             t2_img_log = Image.open(list(t2_images_dir.glob(name[sample_index] + '.*'))[0])
             label_log = Image.open(list(labels_dir.glob(name[sample_index] + '.*'))[0])

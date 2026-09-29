@@ -59,7 +59,7 @@ class CDDloader(data.Dataset):
         img1 = Image.open(os.path.join(self.data_dir, self.phase, 'A', name))
         img2 = Image.open(os.path.join(self.data_dir, self.phase, 'B', name))
         label_name = name.replace("tif", "png") if name.endswith("tif") else name   # for shengteng
-        label = Image.open(os.path.join(self.data_dir, self.phase, 'label', label_name))
+        label = Image.open(os.path.join(self.data_dir, self.phase, 'OUT', label_name))
 
         if self.dual_label:
             label2 = Image.open(os.path.join(self.data_dir, self.phase, 'label2', label_name))

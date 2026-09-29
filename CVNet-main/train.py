@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import torch
 import torch.nn as nn
 from torchvision.models import resnet18
@@ -93,20 +95,20 @@ def train_net(dataset_name):
     # 1. Create dataset, checkpoint and best model path
 
     # compute mean and std of train dataset to normalize train/val dataset
-    t1_mean, t1_std = compute_mean_std(images_dir=f'./{dataset_name}/train/t1/')
-    t2_mean, t2_std = compute_mean_std(images_dir=f'./{dataset_name}/train/t2/')
-    # t1_mean,t1_std=np.asarray([0.45026044,0.44666811,0.38134658]),np.asarray([0.17456748,0.16490024,0.15318057])
-    # t2_mean, t2_std =np.asarray ([0.34552285,0.33819558,0.28881546]),np.asarray([0.12937804,0.12601846,0.1187869])
+    # t1_mean, t1_std = compute_mean_std(images_dir=f'../../../{dataset_name}/train/A/')
+    # t2_mean, t2_std = compute_mean_std(images_dir=f'../../../{dataset_name}/train/B/')
+    t1_mean,t1_std=np.asarray([0.45026044,0.44666811,0.38134658]),np.asarray([0.17456748,0.16490024,0.15318057])
+    t2_mean, t2_std =np.asarray ([0.34552285,0.33819558,0.28881546]),np.asarray([0.12937804,0.12601846,0.1187869])
 
     # dataset path should be dataset_name/train or val/t1 or t2 or label
     dataset_args = dict(t1_mean=t1_mean, t1_std=t1_std, t2_mean=t2_mean, t2_std=t2_std)
-    train_dataset = BasicDataset(t1_images_dir=f'./{dataset_name}/train/t1/',
-                                 t2_images_dir=f'./{dataset_name}/train/t2/',
-                                 labels_dir=f'./{dataset_name}/train/label/',
+    train_dataset = BasicDataset(t1_images_dir=f'../../../{dataset_name}/train/A/',
+                                 t2_images_dir=f'../../../{dataset_name}/train/B/',
+                                 labels_dir=f'../../../{dataset_name}/train/OUT/',
                                  train=True, **dataset_args)
-    val_dataset = BasicDataset(t1_images_dir=f'./{dataset_name}/val/t1/',
-                               t2_images_dir=f'./{dataset_name}/val/t2/',
-                               labels_dir=f'./{dataset_name}/val/label/',
+    val_dataset = BasicDataset(t1_images_dir=f'../../../{dataset_name}/val/A/',
+                               t2_images_dir=f'../../../{dataset_name}/val/B/',
+                               labels_dir=f'../../../{dataset_name}/val/OUT/',
                                train=False, **dataset_args)
 
     # 2. Markdown dataset size
@@ -115,9 +117,9 @@ def train_net(dataset_name):
 
     # 3. Create data loaders
 
-    loader_args = dict(num_workers=4,
-                       prefetch_factor=5,
-                       persistent_workers=True,
+    loader_args = dict(num_workers=0,
+                    #    prefetch_factor=5,
+                    #    persistent_workers=True,
                        pin_memory=True,
                        )
     train_loader = DataLoaderX(train_dataset, shuffle=True, drop_last=False, batch_size=ph.batch_size, **loader_args)
@@ -154,7 +156,7 @@ def train_net(dataset_name):
         'ViT-B-16-SigLIP-256',
         device=device,
     )
-    weights_path = '/home/zhengzhiyong/.cache/huggingface/hub/models--timm--ViT-B-16-SigLIP-256/snapshots/149fecaed17d2230c5b631c8b66f93cbfabcfcb9/open_clip_pytorch_model.bin'  # 请替换为你的实际权重文件路径
+    weights_path = r'D:\=0=DLProject\pretrained_checkpoint\open_clip_pytorch_model.bin'  # 请替换为你的实际权重文件路径
     state_dict = torch.load(weights_path, map_location=device)
     model.load_state_dict(state_dict, strict=False)
     # # # tokenizer = open_clip.get_tokenizer('hf-hub:timm/ViT-B-16-SigLIP-256')
@@ -214,9 +216,9 @@ def train_net(dataset_name):
     to_pilimg = T.ToPILImage()  # convert to PIL image to log in wandb
 
     # model saved path
-    checkpoint_path = f'./{dataset_name}_checkpoint/'
-    best_f1score_model_path = f'./{dataset_name}bit_best_f1score_model/'
-    best_loss_model_path = f'./{dataset_name}_best_loss_model/'
+    checkpoint_path = f'../../results/CVNet/{dataset_name}_checkpoint/'
+    best_f1score_model_path = f'../../results/CVNet/{dataset_name}bit_best_f1score_model/'
+    best_loss_model_path = f'../../results/CVNet/{dataset_name}_best_loss_model/'
 
     non_improved_epoch = 0  # adjust learning rate when non_improved_epoch equal to patience
 

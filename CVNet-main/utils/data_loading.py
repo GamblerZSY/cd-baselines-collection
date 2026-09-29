@@ -141,10 +141,11 @@ class BasicDataset(Dataset):
         t1_name = self.t1_ids[idx]
         t2_name = self.t2_ids[idx]
         assert t1_name == t2_name, f't1 name{t1_name} not equal to t2 name{t2_name}'
+        
         t1_img_file = list(self.t1_images_dir.glob(t1_name + '.*'))
         t2_img_file = list(self.t2_images_dir.glob(t2_name + '.*'))
         label_file = list(self.labels_dir.glob(t1_name + '.*'))
-
+        
         assert len(label_file) == 1, f'Either no label or multiple labels found for the ID {t1_name}: {label_file}'
         assert len(t1_img_file) == 1, f'Either no image or multiple images found for the ID {t1_name}: {t1_img_file}'
         t1_img = self.load(t1_img_file[0])

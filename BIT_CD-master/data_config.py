@@ -6,7 +6,7 @@ class DataConfig:
     def get_data_config(self, data_name):
         self.data_name = data_name
         if data_name == 'LEVIR':
-            self.root_dir = 'path to the root of LEVIR-CD dataset'
+            self.root_dir = r'D:\=0=DLProject\TEST_LEVIR_CD\samples'
         elif data_name == 'quick_start':
             self.root_dir = './samples/'
         else:

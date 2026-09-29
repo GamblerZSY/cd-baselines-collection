@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore")
 import datetime
 import torch
 from sklearn.metrics import precision_recall_fscore_support as prfs
@@ -31,6 +33,7 @@ Set up environment: define paths, download data, and set device
 """
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 dev = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# dev = torch.device("cpu")
 logging.info('GPU AVAILABLE? ' + str(torch.cuda.is_available()))
 
 def seed_torch(seed):
