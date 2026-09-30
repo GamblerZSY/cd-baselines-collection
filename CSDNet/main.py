@@ -17,7 +17,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train a model for change detection')
 
     # ===== 1. 基本与运行模式 =====
-    parser.add_argument('--dataset',        type=str, default='LEVIR-CD', help='Path to dataset root')
+    parser.add_argument('--dataset',        type=str, default=r'D:\=0=DLProject\TEST_LEVIR_CD\samples', help='Path to dataset root')
     parser.add_argument('--model_name',     type=str, default='SEED_EfficientNet', help='Model name')
     parser.add_argument('--model_type',     type=str, default='cd', help='Model type (change detection/domain generalization)')
     parser.add_argument('--model_arch',     type=str, default='BaseCD', help='Model Architecture')
@@ -27,15 +27,15 @@ if __name__ == '__main__':
     parser.add_argument('--mode',           type=str, default='train', help='Mode of the program (train/test)')
     parser.add_argument('--resume_path',    type=str, default=None,  help='Path to resume from checkpoint')
     parser.add_argument('--exp_name',       type=str, default='Default', help='Experiment name')
-    parser.add_argument('--work_dirs',       type=str, default='work_dirs', help='Working directory for saving results')
+    parser.add_argument('--work_dirs',       type=str, default='../../resultrs/CSDNet', help='Working directory for saving results')
 
     # ===== 2. 数据加载与预处理 =====
-    parser.add_argument('--batch_size',     type=int, default=16,   help='Batch size for training')
-    parser.add_argument('--num_workers',    type=int, default=8,    help='Number of workers for data loading')
+    parser.add_argument('--batch_size',     type=int, default=8,   help='Batch size for training')
+    parser.add_argument('--num_workers',    type=int, default=0,    help='Number of workers for data loading')
     parser.add_argument('--resize_size',    type=int, default=1,  help='Resize size for input images')
-    parser.add_argument('--src_size',       type=int, default=1024,  help='Source size for input images')
+    parser.add_argument('--src_size',       type=int, default=256,  help='Source size for input images')
     parser.add_argument('--crop_size',      type=int, default=256,  help='Crop size for input images')
-    parser.add_argument('--overlap',        type=int, default=128,  help='Overlap size for sliding window')
+    parser.add_argument('--overlap',        type=int, default=0,  help='Overlap size for sliding window')
 
     # ===== 3. 模型输出与类别 =====
     parser.add_argument('--pred_idx',       type=int, default=1,    help='GPU ID to use / index of output branch')
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
     # ===== 7. 日志与结果保存 =====
     parser.add_argument('--comet',            action=argparse.BooleanOptionalAction, default=True,  help='Use Comet logger')
-    parser.add_argument('--save_test_results', type=str, default='test_results', help='Path to save test results')
+    parser.add_argument('--save_test_results', type=str, default='../../resultrs/CSDNet/test_results', help='Path to save test results')
 
     # ===== 8. 分布式与硬件配置 =====
     parser.add_argument('--accelerator',  type=str, default='gpu',   help='Accelerator for training')
@@ -102,9 +102,9 @@ if __name__ == '__main__':
         print(f'  [{idx}] {aug}')
     
     if args.model_type == 'cd':
-        train_dataset = CDTXTDataset(os.path.join(args.dataset, 'train.txt'), transform=train_transform)
-        val_dataset = CDTXTDataset(os.path.join(args.dataset, 'val.txt'), transform=test_transform)
-        test_dataset = CDTXTDataset(os.path.join(args.dataset, 'test.txt'), transform=test_transform)
+        train_dataset = CDTXTDataset(os.path.join(args.dataset, r'\list\train.txt'), transform=train_transform)
+        val_dataset = CDTXTDataset(os.path.join(args.dataset, r'\list\val.txt'), transform=test_transform)
+        test_dataset = CDTXTDataset(os.path.join(args.dataset, r'\list\test.txt'), transform=test_transform)
     elif args.model_type == 'dgcd':
         train_dataset = DGCDTXTDataset(train_domain=['WaterCDPNG', 'PX-CLCD', 'WHUCD', 'LEVIR-CD'], split='train', transform=train_transform)
         val_dataset = DGCDTXTDataset(train_domain=['WaterCDPNG', 'PX-CLCD', 'WHUCD', 'LEVIR-CD'], split='val', transform=test_transform)
